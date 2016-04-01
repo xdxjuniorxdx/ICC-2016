@@ -1,3 +1,4 @@
+# Busca Binária Ordenada
 def binario():
   b = 0
   c = n
@@ -15,6 +16,7 @@ def binario():
 
   return -1
 
+# Busca Sequencial não Ordenada
 def linear():
   i = 0
   while i < n:
@@ -25,7 +27,8 @@ def linear():
     
   return -1
 
-def linearSeq():
+# Busca Sequencial Ordenada
+def linearOrd():
   i = 0
   while i < n:
     if a[i] == x:
