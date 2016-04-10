@@ -293,7 +293,22 @@ def textBaseInterface():
           print "Você achou o ouro!"
     else:
       i = getch();
-      if i == '\x1b': #teclas especiais
+      if os.name == 'nt':
+        if ord(i) == 224:
+          i = getch()
+          if i == 'H': # seta para cima
+            cursorY -= 1
+            print "up"
+          elif i == 'P': # seta para baixo
+            cursorY += 1
+            print "down"
+          elif i == 'M': # seta para a direita
+            cursorX += 1
+            print "right"
+          elif i == 'K': # seta para a esquerda
+            cursorX -= 1
+            print "left"
+      elif i == '\x1b': #teclas especiais
         getch() # isso retorna '['
         i = getch() # é necessário 3 "lidas" no Linux
         if i == 'A': # seta para cima
