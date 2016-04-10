@@ -323,29 +323,30 @@ def textBaseInterface():
         elif i == 'D': # seta para a esquerda
           cursorX -= 1
           print "left"
-        
-        # determina limites para o cursor
-        if cursorY < 0:
-          cursorY = 0
-        elif cursorY >= len(mapa):
-          cursorY = len(mapa) -1 # cursor inicia no 0
-        if cursorX < 0:
-          cursorX = 0
-        elif cursorX >= len(mapa[0]):
-          cursorX = len(mapa[0]) - 1 # cursor inicia no 0
-        # rola a exibição do mapa se necessário
-        if cursorY > posIntY + sizeMapY - 1:
-          posIntY = cursorY - sizeMapY + 1
-        elif cursorY < posIntY:
-          posIntY = cursorY
-        if cursorX > posIntX + sizeMapX - 1:
-          posIntX = cursorX - sizeMapX + 1
-        elif cursorX < posIntX:
-          posIntX = cursorX
-        print cursorY, cursorX, posIntY, posIntX
       elif i == 's':
         cursor = 0
         print "Voltando ao modo normal..."
+      
+      # determina limites para o cursor
+      if cursorY < 0:
+        cursorY = 0
+      elif cursorY >= len(mapa):
+        cursorY = len(mapa) -1 # cursor inicia no 0
+      if cursorX < 0:
+        cursorX = 0
+      elif cursorX >= len(mapa[0]):
+        cursorX = len(mapa[0]) - 1 # cursor inicia no 0
+      # rola a exibição do mapa se necessário
+      if cursorY > posIntY + sizeMapY - 1:
+        posIntY = cursorY - sizeMapY + 1
+      elif cursorY < posIntY:
+        posIntY = cursorY
+      if cursorX > posIntX + sizeMapX - 1:
+        posIntX = cursorX - sizeMapX + 1
+      elif cursorX < posIntX:
+        posIntX = cursorX
+      print cursorY, cursorX, posIntY, posIntX
+
 
 def main():
   i = raw_input("Você quer executar a Interface Textual? [s(im)|N(ão)] ");
