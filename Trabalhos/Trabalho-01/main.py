@@ -21,7 +21,6 @@ mapa = []
 actions = ("mova", "olhe", "atire")
 directions = ("direita", "esquerda", "cima", "baixo")
 
-output = ""
 error = 0
 
 # Mapa já visualizado
@@ -98,7 +97,6 @@ def isValidPos(x, y):
 def move(x, y):
   global posX, posY
   global score, movLeft, gold, life
-  global output
   global mapa
   score -= 1
   movLeft -= 1
@@ -118,7 +116,6 @@ def move(x, y):
           score += 1000 # Sair da caverna
           endGame()
           return 0 # jogo terminou
-    output = mapa[y][x]
     knownMap[y][x] = mapa[y][x]
     if knownMap[y][x] == '':
       knownMap[y][x] = "!"
@@ -127,33 +124,30 @@ def move(x, y):
 
 def look(x, y):
   global mapa, knownMap
-  global score, output
-#  movLeft -= 1
+  global score
+  
   score -= 1
   if isValidPos(x, y):
     if ("M" in mapa[y][x].split(" ")) or ("A" in mapa[y][x].split(" ")):
       GameOver()
       return -4 # morte
-    output = mapa[y][x]
     knownMap[y][x] = mapa[y][x]
     return 2 # sem problemas
   return -6 # posição inválida
 
 def shoot(x, y):
-  global score, arrow, wumpus, output
+  global score, arrow, wumpus
   global mapa, knownMap
   if isValidPos(x, y):
     if arrow > 0:
       arrow -= 1;
       if "M" in mapa[y][x].split(" "):
         score += 10000
-        output = "G"
         wumpus = 0
         mapa[y][x] = mapa[y][x].replace("M", "")
         knownMap[y][x] = knownMap[y][x].replace("M", "")
         return 3 # Acertou 
       else:
-        output = ""
         return 4 # não acertou
     else: #sem flechas
       return -5
@@ -214,9 +208,8 @@ def GameOver():
 def commandBaseInterface():
   global posX, posY
   global score, gold
-  global error, command, output
+  global error, command
   global mapa, knownMap
-  output = ""
   if command == "sair":
     print "Saindo..."
   else:
@@ -238,7 +231,6 @@ def commandBaseInterface():
       if error == 1: # Moveu sem nunhum problema
         knownMap[posY][posX] = mapa[posY][posX]
       elif error == 2: # Olhou sem nenum problema
-#        knownMap[newPos[1]][newPos[0]] = output
         print u"Você sentirá: {2}".format(listSense(newPos[0], newPos[1]))
       elif error == 3: # acertpu o tiro
         print u"Você matou Wumpus!!!"
@@ -383,7 +375,6 @@ def textBaseInterface():
   global mapa, knowMap
   
   info = ""
-  output = ""
   error = 0
   if cursor == 0: # cursor inativo
     if command == "cursor":
@@ -423,7 +414,6 @@ def textBaseInterface():
       if error == 1:
         info = " Voce esta sentindo: " + listSense(posX, posY)
       elif error == 2: # Olhou sem nenum problema
-#        knownMap[newPos[1]][newPos[0]] = output
         info = "Na posicao ({0}, {1}) voce sentira: {2} ".format( newPos[0], newPos[1], listSense(newPos[0], newPos[1]) )
       elif error == 3: # acertpu o tiro
         info = "Voce matou Wumpus!!!"
@@ -573,7 +563,7 @@ def ai():
   
   cleanWrongMark(posX, posY, "?a", brisa[2])
   cleanWrongMark(posX, posY, "?w", cheiro[2])
-
+  
   if (wumpus == 1) or (gold == 0):
     # casas já percorridas
     # direita
@@ -637,7 +627,6 @@ def ai():
       for i, j in enumerate(possibleMove):
         if j > 2:
           possibleMove[i] = 0
-  print possibleMove
   if isBinaryArray(possibleMove) == 0:
     d = getMaxIndex(possibleMove)
   else:
@@ -647,7 +636,6 @@ def ai():
       if oldPossibleMove[i] != 0:
         if possibleMove[i] != 0:
           d = i
-      print i
       i += 1
     if d == -1:
       d = getMaxIndex(possibleMove)
@@ -661,7 +649,7 @@ def ai():
 
 #######################################################
 def leituraArquivo():
-  with open(sys.argv[0].replace("mainWin.py","") + 'matriz.txt', 'r') as f:
+  with open(sys.argv[0].replace("main.py","") + 'matriz.txt', 'r') as f:
     l = int(f.readline())
     c = int(f.readline())
     i = 0
@@ -686,8 +674,6 @@ def main():
   global mapa, knownMap
   global movLeft, command
   mapa = leituraArquivo()
-  for i in mapa:
-    print i
   knownMap = [["" for i in range(0,len(mapa[0]))] for j in range(0,len(mapa))]
   knownMap[0][0] = mapa[0][0];
   movLeft = len(mapa) * len(mapa[0])
@@ -710,7 +696,6 @@ def main():
     
     draw(" Voce esta sentindo: " + listSense(0,0))
     while command != "sair":
-      output = ""
       if movLeft <= 0:
         print u"Você não pode mais se movimentar"
         endGame()

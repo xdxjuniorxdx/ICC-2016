@@ -1,0 +1,116 @@
+﻿Trabalho 1 - ICC I
+Engenharia de Computação 016
+Henry Shinji Suzukawa  9771504
+
+Para executar esse jogo instale Python 2.x e execute "python [caminho para o jogo]/main.py", caso esteja no Windows talvez você deva adicionar o caminho do Python e a extenção.
+
+Este jogo foi baseado no "Mundo de Wumpus" de Gregory Yob, o personagem está em uma caverna e deve encontrar o tesouro e sair dela ileso, para isso ele é munido de apenas uma flecha que pode matar Wumpus, o terrível monstro. Caso o personagem se encontre com Wumpus ou caia em um abismo, ele morrerá.
+
+O jogo funciona por meio de comandos que são "sair", "cursor" (apenas para a Interface Textual) e "[ação] para [direção]", onde [ação] se refere a uma das palavras "mova", "atire" ou "olhe" e [direção] as palavras "direita", "esquerda", "cima" ou "baixo".
+IMPORTANTE: Comandos não são CaSe Sensitive
+
+Lista de Erros (retornados pelas funções):
+ -1. Comando Inválido
+ -2. Ação Inválida
+ -3. Direção Inválida
+ -4. Morte Horrível
+ -5. Sem flechas
+ -6. Posição Inválida
+  0. O jogo terminou
+  1. Moveu sem nenhum problema
+  2. Olhou sem nenhum problema
+  3. Acertou o tiro
+  4. Não acertou o tiro
+
+Lista de Variáveis (inicialização):
+ - posX (0): posição x do personagem
+ - posY (0): posição y do personagem
+ - score (0): pontuação do usuário
+ - arrow (1): flechas restantes
+ - life (0): tentativa atual
+ - gold (0): verifica se encontrou o tesouro
+ - movLeft (inicializado em main() como o tamanho da matriz mapa): movimentos restantes
+ - mapa (inicializado em main() com a função leituraArquivo()): mapa
+ - actions (("mova", "olhe", "atire")): tuple com as ações válidas
+ - directions (("direita", "esquerda", "cima", "baixo")): tuple com as direções válidas
+ - output (""): guarda um valor dado pelas funções de interação com o personagem
+ - error (0): erro retornado pelas funções
+ - knownMap (inicializado em main() com o tamanho da matriz): matriz com as informações das casas já vistas
+ - maxSizeMapX (30): tamanho máximo do mapa a ser impresso
+ - maxSizeMapY (15): tamanho máximo do mapa a ser impresso
+ - sizeMapX (maxSizeMapX): tamanho do mapa a ser impresso
+ - sizeMapY (maxSizeMapY): tamanho do mapa a ser impresso
+ - cursorX (0): posição x do cursor
+ - cursorY (0): posição y do cursor
+ - chrPers ("x "): caractere que representa o personagem
+ - chrcursor ("| "): caractere que representa o cursor
+ - cursor (0): verifica se o cursor está ativo / 0 - não / 1 - sim
+ - command (""): comando dado ao programa
+
+Lista de funções:
+ - Controle Geral:
+   > getch(): retorna a tecla pressionada
+   > listSense(x, y): retorna uma String com as sensações da posição
+   > isValidPos(x, y): retorna 1 se a posição é valida, senão retorna 0
+   > move(x, y): movimenta o personagem e retorna segundo a Lista de Erros
+   > look(x, y): output=mapa[y][x] e retorna segundo a Lista de Erros
+   > shoot(x, y): output="G" ou output = "" e retorna segundo a Lista de Erros
+   > dirToPos(direction): transforma direção (string) em posição (tuple (x,y))
+   > isValidCommand(cmd): verifica se o comando é válido
+   > handleCommand(action, x, y): manipula o comando (chama devidamente as funções para ações)
+   > endGame(): termina o jogo sem perda de pontos
+   > GameOver(): termina o jogo com perda de pontos
+   > leituraArquivo(): retorna a matriz lida de um arquivo
+   > main(): inicializa variáveis e seleciona a interface
+
+ - Interface por Comandos
+   > printStatus(): imprime os infomações da rodada na forma "Posição: (0, 0)  Score: 0  Vida: 0  Flechas: 0  Mov. rest: 0  Mapa: 0x0"
+   > commandBaseInterface(): controla a interface de comandos
+
+ - Interface Textual:
+   > numSpecialChr(s): retorna o número de caracteres especiais de s
+   > ctrTxt(s, n, Chr): centraliza texto s no tamanho n preenchendo com Chr
+   > drawLine1(x1, chr1): retorna linha com apenas um elemento (representado pelo caractere chr1) na posição x
+   > drawLine2(x1, chr1, x2, chr2): retorna linha com dois elementos nas posições x1 e x2 representados por chr1 e chr2
+   > draw(info): desenha a Interface Textual com a informação (veja mais em Interfaces) info
+   > rollMap(x, y): rola o mapa se necessário para visualizar a posição (x, y)
+   > cursorCtrl(Chr, up, down, right, left): controla a posição do cursor dependendo da tecla pressionada
+   > textBaseInterface(): controla a Interface Textual
+
+ - Interligencia Artificial:
+   > getMaxIndex(a): retorna a posição do maior elemento
+   > isBinaryArray(a): testa se os elementos da array são 1 ou 0 apenas
+   > getIndex( elem, a ): retorna a posição do elemento de uma array
+   > searchAround( x, y, elem ): procura em knownMap um elemento nas posições adjacentes (x, y)
+   > cleanWrongMark( x, y, mark, StrongSense ): limpa casas marcadas como perigosas erroniamente
+   > setMark( x, y, possibleMove, mark ): marca posições como perigosas
+   > count( elem, a ): conta o número de um elemento em uma array
+   > getKnownMap(x, y): retorna o mapa conhecido na posição (x, y)
+   > ai(): controla os comandos
+
+Interfaces:
+  Comando:
+	Posição: (0, 0)  Score: 0  Vida: 0  Flechas: 1  Mov. rest: 0  Mapa: 0x0
+	Digite um comando: [comando]
+	[Retorno do Comando]
+	Você está sentindo: [Informações sobre a posição]
+
+  Textual:
+	+------------------------------ Mundo do Wumpus -------------------------------+
+	+------------------------------------------------------------------------------+
+		Posição: (0, 0)  Score: 0  Vida: 0  Flechas: 1  Mov. rest: 80         
+	+------------------------------------------------------------------------------+
+	|                                                                              |
+	|                             x . . . . . . . . .                              |
+	|                             . . . . . . . . . .                              |
+	|                             . . . . . . . . . .                              |
+	|                             . . . . . . . . . .                              |
+	|                             . . . . . . . . . .                              |
+	|                             . . . . . . . . . .                              |
+	|                             . . . . . . . . . .                              |
+	|                             . . . . . . . . . .                              |
+	|                                                                              |
+	+ --------------------------------- [info] ----------------------------------- +
+	   Digite um comando: 
+	
+	*** [info] = [RETORNO DO COMANDO] ou [Informações sobre a posição]
