@@ -33,7 +33,6 @@ Lista de Variáveis (inicialização):
  - mapa (inicializado em main() com a função leituraArquivo()): mapa
  - actions (("mova", "olhe", "atire")): tuple com as ações válidas
  - directions (("direita", "esquerda", "cima", "baixo")): tuple com as direções válidas
- - output (""): guarda um valor dado pelas funções de interação com o personagem
  - error (0): erro retornado pelas funções
  - knownMap (inicializado em main() com o tamanho da matriz): matriz com as informações das casas já vistas
  - maxSizeMapX (30): tamanho máximo do mapa a ser impresso
