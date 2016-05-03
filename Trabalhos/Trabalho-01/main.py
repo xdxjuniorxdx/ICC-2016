@@ -638,7 +638,6 @@ def ai():
   elif possibleMove[2] > 2 and oldMove == 3:
     possibleMove[2] = 2
   
-  print possibleMove, oldMove
   if isBinaryArray(possibleMove) == 0:
     d = getMaxIndex(possibleMove)
   else:
@@ -696,8 +695,6 @@ def main():
   global mapa, knownMap
   global movLeft, command
   mapa = leituraArquivo()
-  for i in mapa:
-    print i
   knownMap = [["" for i in range(0,len(mapa[0]))] for j in range(0,len(mapa))]
   knownMap[0][0] = mapa[0][0];
   movLeft = len(mapa) * len(mapa[0])
