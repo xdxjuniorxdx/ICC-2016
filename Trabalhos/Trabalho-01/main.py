@@ -96,7 +96,7 @@ def isValidPos(x, y):
 # movimenta o personagem
 def move(x, y):
   global posX, posY
-  global score, movLeft, gold, life
+  global score, movLeft, gold, life, wumpus
   global mapa
   score -= 1
   movLeft -= 1
@@ -112,7 +112,7 @@ def move(x, y):
       return -4 # morte
     elif posX + posY == 0: # posx = 0 e posy = 0
       if life == 0:
-        if gold > 0: # Sair da caverna após ter conseguido o ouro
+        if gold > 0 or wumpus == 0: # Sair da caverna após ter conseguido o ouro
           score += 1000 # Sair da caverna
           endGame()
           return 0 # jogo terminou
@@ -532,13 +532,14 @@ def getKnownMap(x, y):
     return knownMap[y][x]
   return ""
 
+oldMove = 0
 oldPossibleMove = [0,0,0,0]
 def ai():
   global posX, posY
   global actions, directions, arrow, gold
   global knownMap
   global command
-  global oldPossibleMove
+  global oldMove, oldPossibleMove
   if knownMap[posY][posX] == "":
     knownMap[posY][posX] = "!"
   # 0  - movimento impossível
@@ -627,6 +628,17 @@ def ai():
       for i, j in enumerate(possibleMove):
         if j > 2:
           possibleMove[i] = 0
+  
+  if possibleMove[1] > 2 and oldMove == 0:
+    possibleMove[1] = 2
+  elif possibleMove[0] > 2 and oldMove == 1:
+    possibleMove[0] = 2
+  elif possibleMove[3] > 2 and oldMove == 2:
+    possibleMove[3] = 2
+  elif possibleMove[2] > 2 and oldMove == 3:
+    possibleMove[2] = 2
+  
+  print possibleMove, oldMove
   if isBinaryArray(possibleMove) == 0:
     d = getMaxIndex(possibleMove)
   else:
@@ -637,14 +649,24 @@ def ai():
         if possibleMove[i] != 0:
           d = i
       i += 1
-    if d == -1:
+    
+    if d < 0:
       d = getMaxIndex(possibleMove)
+      if possibleMove[2] != 0:
+        d = 2
+      elif possibleMove[1] != 0:
+        d = 1
+      elif possibleMove[0] != 0:
+        d = 0
+      elif possibleMove[3] != 0:
+        d = 3
   if d < 0 or act == -1 or command == "sair":
     command = "sair"
   else:
     command = actions[act] + " para " + directions[d]
   print "   Digite um comando: ", command
   oldPossibleMove = possibleMove
+  oldMove = d
   time.sleep(0.2)
 
 #######################################################
@@ -674,6 +696,8 @@ def main():
   global mapa, knownMap
   global movLeft, command
   mapa = leituraArquivo()
+  for i in mapa:
+    print i
   knownMap = [["" for i in range(0,len(mapa[0]))] for j in range(0,len(mapa))]
   knownMap[0][0] = mapa[0][0];
   movLeft = len(mapa) * len(mapa[0])
